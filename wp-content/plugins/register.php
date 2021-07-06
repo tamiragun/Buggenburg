@@ -9,19 +9,51 @@
  License: UNLICENSED
  */
 
-function register_get_item(){
+function register_is_item_reserved(){
     $item = $_GET['item'];
     global $wpdb;
     //$register_results = $wpdb->get_results("SELECT * FROM " . $wpdb->wp_registry . "WHERE id = '" . $item . "'");
     $register_results = $wpdb->get_row("SELECT * FROM wp_registry WHERE id = '" . $item . "'");
     if ($register_results->password) {
-        return 'test1';
+        return true;
     } else {
-        return 'test2';
-    }
-    
-    
+        return false;
+    } 
 }
+
+function register_print_form(){
+    $item = $_GET['item'];
+    if (!register_is_item_reserved()){
+        $form = '
+<p>After you have purchased this item, you can mark it as \'reserved\' here. This will indicate to other guests that the item has already been purchased by someone. Simply choose a password and click "Reserve this item"</p>
+<p>If you want to make the item available again to other guests, you can come back later and \'un-reserve\' it with the same password.</p>
+<br>       
+<form method="POST" >
+        <label for="pwd" style="font-color: white;">Password:</label><br>
+        <input type="text" id="pwd" name="pwd" required>
+        <input type="hidden" id="item" name="' . $item . '">
+        <input type="submit" value="Reserve this item">
+    </form>';
+        return $form;
+    }
+}
+
+function register_update_registry_database(){
+    if (is_page('reserve-gift')){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $reserved_item = $_GET['item'];
+            $password = $_POST['pwd'];
+            global $wpdb;
+            $sql = $wpdb->prepare( "UPDATE wp_registry SET password = %s WHERE id = %s;", $password, $reserved_item);
+            $wpdb->query($sql);
+            //$wpdb->update($wpdb->wp_registry, array("password" => $password),array("id"=>$reserved_item), array("%s"), array("%s"),);
+
+        }
+        
+    }
+}
+
+add_action( 'wp_head' , 'register_update_registry_database' ); 
 
 function register_test_add_html( $content ) {
     if (is_page('gifts')){
@@ -38,13 +70,13 @@ add_filter( 'the_content', 'register_test_add_html', 99);
  function register_test_form( $content ) {
     if (is_page('reserve-gift')){
         $item = $_GET['item'];
-        $test = register_get_item();
-        $content = $test . '<form method="POST">
+        $content = register_print_form();
+/*         '<form method="POST">
     <label for="pwd" style="font-color: white;">Enter a password that you will definitely remember if you want to un-reserve this item later on:</label><br><br>
     <input type="text" id="pwd" name="pwd" required>
     <input type="hidden" id="item" name="' . $item . '"><br><br>
     <input type="submit" value="Reserve this item">
-    </form>'; 
+    </form>'; */ 
         return $content;
     } else {
         return $content;
