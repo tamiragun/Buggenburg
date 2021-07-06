@@ -27,3 +27,48 @@ VALUES (10, 'https://sissyboy.xcdn.nl/sissy-boy-homeland-ijzer-zwart-00047136-16
 
 INSERT INTO wp_registry (id, image_url)
 VALUES (11, 'https://sissyboy.xcdn.nl/sissy-boy-homeland-aardewerk-oranje-00045794-109_1.jpg?f=xlarge');
+
+
+UPDATE `wp_registry` 
+SET url = 'https://www.made.com/nl/lab-hanglamp-turkoois-diepgrijs-en-mosterdgeel'
+WHERE id = 1;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.made.com/nl/syrah-bedsprei-van-100-katoenfluweel-225x220cm-blauwgroen'
+WHERE id = 2;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.made.com/nl/klara-sprei-van-lamswol-200-x-200-cm-mostergeel'
+WHERE id = 3;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.made.com/nl/hakkan-wasmand-van-polyrotan'
+WHERE id = 4;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.made.com/nl/joss-30l-koepelvormige-pedaalemmer-geel'
+WHERE id = 5;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.made.com/nl/cross-platte-pedaalemmer-prullenbak-27l-en-3l-bosgroen-en-koper'
+WHERE id = 6;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.sissy-boy.be/nl/homeland/mand-oranges-medium-00048917-171.html'
+WHERE id = 7;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.sissy-boy.be/nl/homeland/peper-en-zout-stel-mandarijn-00049239-109.html'
+WHERE id = 8;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.sissy-boy.be/nl/homeland/rose-champagne-slacouvert-set-00046878-122.html'
+WHERE id = 9;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.sissy-boy.be/nl/homeland/zwart-bijzettafeltje-00047136-166.html'
+WHERE id = 10;
+
+UPDATE `wp_registry` 
+SET url = 'https://www.sissy-boy.be/nl/homeland/oranje-aardewerk-kom-klein-art-00045794-109.html'
+WHERE id = 11;
