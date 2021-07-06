@@ -11,7 +11,16 @@
 
 function register_get_item(){
     $item = $_GET['item'];
-    echo $item;
+    global $wpdb;
+    //$register_results = $wpdb->get_results("SELECT * FROM " . $wpdb->wp_registry . "WHERE id = '" . $item . "'");
+    $register_results = $wpdb->get_row("SELECT * FROM wp_registry WHERE id = '" . $item . "'");
+    if ($register_results->password) {
+        return 'test1';
+    } else {
+        return 'test2';
+    }
+    
+    
 }
 
 function register_test_add_html( $content ) {
@@ -26,21 +35,22 @@ function register_test_add_html( $content ) {
 }
 add_filter( 'the_content', 'register_test_add_html', 99); 
 
-function register_test_form( $content ) {
+ function register_test_form( $content ) {
     if (is_page('reserve-gift')){
         $item = $_GET['item'];
-        $content = '<form method="POST">
+        $test = register_get_item();
+        $content = $test . '<form method="POST">
     <label for="pwd" style="font-color: white;">Enter a password that you will definitely remember if you want to un-reserve this item later on:</label><br><br>
     <input type="text" id="pwd" name="pwd" required>
     <input type="hidden" id="item" name="' . $item . '"><br><br>
     <input type="submit" value="Reserve this item">
-    </form>';
+    </form>'; 
         return $content;
     } else {
         return $content;
     }
 }
-add_filter( 'the_content', 'register_test_form', 1); 
+add_filter( 'the_content', 'register_test_form', 99);  
 
 /* function register_test_form() {
     echo '<form method="POST">
@@ -49,8 +59,8 @@ add_filter( 'the_content', 'register_test_form', 1);
     <input type="submit" value="Reserve this item">
     </form>';
 }
-
-add_action( 'wp_head' , 'register_test_form' ); */
+*/
+//add_action( 'wp_head' , 'register_get_item' ); 
 
 
 /* add_action( 'the_content', 'my_thank_you_text', 10, 1 );
