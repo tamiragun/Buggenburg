@@ -62,12 +62,12 @@ function register_print_form(){
         <br>       
         <form method="POST" >
            <label for="pwd" style="font-color: white;">Password:</label><br>
-           <input type="text" id="pwd" name="pwd" required>
+           <input type="text" id="pwd" name="pwd" maxlength="99" required>
            <input type="hidden" id="item" name="' . $item . '">
            <input type="submit" value="Reserve this item">
         </form>
         <br>
-        <p>Or <a href="/wordpress/buggenburg_local/gifts">go back</a> to browse 
+        <p>Or <a href="/gifts">go back</a> to browse 
             other items.</p>';
         return $form;
     //Check if the password of the corresponding registry item is not null 
@@ -78,7 +78,7 @@ function register_print_form(){
         <figure class="wp-block-image size-large is-style-twentytwentyone-border">
             <img src="' . $image_url . '" alt=""/></figure>
         <p>Someone has already reserved this item. You can <a href=
-            "/wordpress/buggenburg_local/gifts">go back</a> to browse other items.</p>
+            "/gifts">go back</a> to browse other items.</p>
         <br>
         <p>If you are the person who reserved this item, and you would like to 
             make it available to other guests again, just enter the password 
@@ -86,7 +86,7 @@ function register_print_form(){
         
         <form method="POST" >
            <label for="pwd" style="font-color: white;">Password:</label><br>
-           <input type="text" id="pwd" name="pwd" required>
+           <input type="text" id="pwd" name="pwd" maxlength="99" required>
            <input type="hidden" id="item" name="' . $item . '">
            <input type="submit" value="Un-reserve this item">
         </form>';
@@ -130,7 +130,7 @@ function register_update_registry_database(){
                         other guests.
                     <br>
                     <br>
-                    <a href=\"/wordpress/buggenburg_local/\">Go back to 
+                    <a href=\"/\">Go back to 
                         home</a>.</p>";                    
         
         //If the item is already reserved check that the saved password matches 
@@ -145,7 +145,7 @@ function register_update_registry_database(){
                         to other guests. 
                     <br>
                     <br>
-                    <a href=\"/wordpress/buggenburg_local/gifts\">Go back</a> 
+                    <a href=\"/gifts\">Go back</a> 
                         to browse other items.</p>";
         //If the item is already reserved but the saved password does not match 
         //the provided password
@@ -157,7 +157,7 @@ function register_update_registry_database(){
                     <form method="POST" >
                        <label for="pwd" style="font-color: white;">Password:
                             </label><br>
-                       <input type="text" id="pwd" name="pwd" required>
+                       <input type="text" id="pwd" name="pwd" maxlength="99" required>
                        <input type="hidden" id="item" name="' . $item . '">
                        <input type="submit" value="Un-reserve this item">
                     </form>
@@ -179,18 +179,27 @@ function register_update_registry_database(){
 function register_reserve_item( $content ) {
     //Only replace the content on this page
     if (is_page('reserve-gift')){
-        //If the form has eben submitted, display the corresponding success or 
-        //error message
-        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $content = register_update_registry_database();
-        //If the form has not yet been submitted, display the form depending on 
-        //whether the item is reserved or not
-        } else {
-            $content = register_print_form();
-        }
         
-        return $content;
-    //If the user is on any other page, just display that page's regular content
+        //Only display the forms if there is an appropriate GET value set for the item. 
+        //Else display fallback page.
+        if (isset($_GET['item']) && $_GET['item'] >0 && $_GET['item'] <= 11){
+            
+            //If the form has eben submitted, display the corresponding success or 
+            //error message
+            if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+                $content = register_update_registry_database();
+            //If the form has not yet been submitted, display the form depending on 
+            //whether the item is reserved or not
+            } else {
+                $content = register_print_form();
+            }
+            
+            return $content;
+    
+        } else {
+            return $content;
+        }
+        //If the user is on any other page, just display that page's regular content
     } else {
         return $content;
     }
