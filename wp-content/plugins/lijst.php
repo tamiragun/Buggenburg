@@ -227,7 +227,7 @@ function lijst_toggle_reserved_items($content){
                 //If it is, find the button HTML in the_content and replace it
                 //with a new string.
                 $string_to_find = 'value="' . $item . '"><input type="submit" value="Reserveer dit artikel">';
-                $string_to_replace = 'value="' . $item . '"><input type="submit" value="Maak dit artikel beschikbaar">';
+                $string_to_replace = 'value="' . $item . '"><input type="submit" value="Maak beschikbaar">';
                 //Return the updated content and move on to the next item in the array
                 $content = str_replace($string_to_find,$string_to_replace, $content);
             }
