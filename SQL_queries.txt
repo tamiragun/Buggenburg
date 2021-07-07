@@ -1,4 +1,7 @@
 INSERT INTO wp_registry (id, image_url)
+VALUES (1, 'https://img.made.com/image/upload/c_pad,d_madeplusgrey.svg,f_auto,w_982,dpr_2.0,q_auto:good,b_rgb:f5f6f4/v4/catalog/product/asset/e/9/6/1/e96106547cb9b71a15b6be7931840c1aa79da14d_CLPLAB001ZMU_UK_Lab_Ceiling_Pendant_Teal_Deep_Grey_and_Mustard_ar3_2_LB01_PS.png');
+
+INSERT INTO wp_registry (id, image_url)
 VALUES (2, 'https://img.made.com/image/upload/c_pad,d_madeplusgrey.svg,f_auto,w_982,dpr_2.0,q_auto:good,b_rgb:f5f6f4/v4/catalog/product/asset/9/9/6/d/996d2999b8fd0add3938231450a9e88f988a0fff_BSPSYR002GRE_UK_Syrah_Cotton_Velvet_Bedspread_225x220cm_Storm_Green_ar3_2_LB01_LS.jpg');
 
 INSERT INTO wp_registry (id, image_url)
