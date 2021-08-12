@@ -67,7 +67,7 @@ function register_print_form(){
            <input type="submit" value="Reserve this item">
         </form>
         <br>
-        <p>Or <a href="/gifts">go back</a> to browse 
+        <p>Or <a href="/inspiration/#gifts">go back</a> to browse 
             other items.</p>';
         return $form;
     //Check if the password of the corresponding registry item is not null 
@@ -78,7 +78,7 @@ function register_print_form(){
         <figure class="wp-block-image size-large is-style-twentytwentyone-border">
             <img src="' . $image_url . '" alt=""/></figure>
         <p>Someone has already reserved this item. You can <a href=
-            "/gifts">go back</a> to browse other items.</p>
+            "/inspiration/#gifts">go back</a> to browse other items.</p>
         <br>
         <p>If you are the person who reserved this item, and you would like to 
             make it available to other guests again, just enter the password 
@@ -145,7 +145,7 @@ function register_update_registry_database(){
                         to other guests. 
                     <br>
                     <br>
-                    <a href=\"/gifts\">Go back</a> 
+                    <a href=\"inspiration/#gifts\">Go back</a> 
                         to browse other items.</p>";
         //If the item is already reserved but the saved password does not match 
         //the provided password
@@ -179,11 +179,19 @@ function register_update_registry_database(){
 function register_reserve_item( $content ) {
     //Only replace the content on this page
     if (is_page('reserve-gift')){
+        //Creat an array of database ids so that we can check if the item number 
+        //is indeed a valid entry in the database
+        global $wpdb;
+        $all_itemsDB = $wpdb->get_results("SELECT id FROM wp_registry");
+        $all_items_ids = [];
+        foreach ($all_itemsDB as $item) {
+            array_push($all_items_ids, $item->id);
+        }
         
         //Only display the forms if there is an appropriate GET value set for the item. 
         //Else display fallback page.
-        if (isset($_GET['item']) && $_GET['item'] >0 && $_GET['item'] <= 11){
-            
+        if (isset($_GET['item']) && in_array($_GET['item'], $all_items_ids)){
+        //if (isset($_GET['item']) && $_GET['item'] >0 && $_GET['item'] <= 11){
             //If the form has eben submitted, display the corresponding success or 
             //error message
             if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -216,16 +224,17 @@ add_filter( 'the_content', 'register_reserve_item', 99);
  */
 function register_toggle_reserved_items($content){
     //Only replace the content on this page
-    if (is_page('gifts')){
+    if (is_page('inspiration')){
         //Loop through the array of available article ids
-        $all_items = [1,2,3,4,5,6,7,8,9,10,11];
-        foreach ($all_items as $item) {
+        global $wpdb;
+        $all_itemsDB = $wpdb->get_results("SELECT id FROM wp_registry");
+        foreach ($all_itemsDB as $item) {
             //Check if the item is reserved
-            if (register_retrieve_password($item)){
+            if (register_retrieve_password($item->id)){
                 //If it is, find the button HTML in the_content and replace it 
                 //with a new string.
-                $string_to_find = 'value="' . $item . '"><input type="submit" value="Reserve this item">';
-                $string_to_replace = 'value="' . $item . '"><input type="submit" value="Un-reserve this item">';
+                $string_to_find = 'value="' . $item->id . '"><input type="submit" value="Reserve this item">';
+                $string_to_replace = 'value="' . $item->id . '"><input type="submit" value="Un-reserve this item">';
                 //Return the updated content and move on to the next item in the array
                 $content = str_replace($string_to_find,$string_to_replace, $content);
             }
@@ -241,5 +250,5 @@ function register_toggle_reserved_items($content){
 
 
 //Add this function to the the_content hook to enable the plugin functionality
-add_filter( 'the_content', 'register_toggle_reserved_items', 99); 
+add_filter( 'the_content', 'register_toggle_reserved_items', 98); 
 
