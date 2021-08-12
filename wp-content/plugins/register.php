@@ -179,7 +179,7 @@ function register_update_registry_database(){
 function register_reserve_item( $content ) {
     //Only replace the content on this page
     if (is_page('reserve-gift')){
-        //Creat an array of database ids so that we can check if the item number 
+        //Create an array of database ids so that we can check if the item number 
         //is indeed a valid entry in the database
         global $wpdb;
         $all_itemsDB = $wpdb->get_results("SELECT id FROM wp_registry");
@@ -191,7 +191,6 @@ function register_reserve_item( $content ) {
         //Only display the forms if there is an appropriate GET value set for the item. 
         //Else display fallback page.
         if (isset($_GET['item']) && in_array($_GET['item'], $all_items_ids)){
-        //if (isset($_GET['item']) && $_GET['item'] >0 && $_GET['item'] <= 11){
             //If the form has eben submitted, display the corresponding success or 
             //error message
             if ($_SERVER['REQUEST_METHOD'] === 'POST'){

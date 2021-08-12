@@ -53,14 +53,15 @@ function lijst_print_form(){
         $form = '
         <figure class="wp-block-image size-large is-style-twentytwentyone-border">
             <img src="' . $image_url . '" alt=""/></figure>
-        <p>Nadat u dit artikel <a href="' . $url . '" target="_blank">
-            via zijn website</a> heeft gekocht, kunt u het hieronder als \'gereserveerd\' 
-            markeren. Zo geeft u aan de andere gasten aan dat iemand dit artikel
-            reeds gekocht heeft.</p> 
-        <p>Kies  een paswoord en klik op "Reserveer dit artikel". Indien u dit 
+        <p>Nadat je dit artikel <a href="' . $url . '" target="_blank">
+            via zijn website</a> hebt gekocht, kan je het hieronder als \'gereserveerd\' 
+            markeren. Zo geef je aan de andere gasten aan dat dit artikel
+            reeds gekocht is.</p> 
+        <p>Kies  een paswoord en klik op "Reserveer dit artikel".</p>
+        <p>Indien je dit 
             artikel later toch terug beschikbaar wilt maken voor de andere gasten,
-            kunt u dit doen door hier terug tekomen, hetzelfde paswoord weer in te 
-            vullen, en op "Maak dit artikel beschikbaar" te klikken.</p>
+            kan je dit doen door op deze pagina het door jou gekozen paswoord weer in te 
+            vullen.</p>
         <br>
         <form method="POST" >
            <label for="pwd" style="font-color: white;">Paswoord:</label><br>
@@ -69,7 +70,7 @@ function lijst_print_form(){
            <input type="submit" value="Reserveer dit artikel">
         </form>
         <br>
-        <p>Of <a href="/cadeaus">keer terug</a> naar alle artikels.</p>';
+        <p>Of <a href="/inspiratie/#cadeaus">keer terug</a> naar alle artikels.</p>';
         return $form;
         //Check if the password of the corresponding registry item is not null
         //(i.e. the item IS reserved)
@@ -78,12 +79,12 @@ function lijst_print_form(){
         $form = '
         <figure class="wp-block-image size-large is-style-twentytwentyone-border">
             <img src="' . $image_url . '" alt=""/></figure>
-        <p>Iemand heeft dit artikel al gereserveerd. U kunt <a href=
-            "/cadeaus">terugkeren</a> naar alle artikels voor meer inspiratie.</p>
+        <p>Iemand heeft dit artikel al gereserveerd. Je kan <a href=
+            "/inspiratie/#cadeaus">terugkeren</a> naar alle artikels voor meer inspiratie.</p>
         <br>
-        <p>Bent u de persoon  die het artikel gereserveerd heeft, en wilt u het 
-            graag weer beschikbaar maken voor de andere gasten? Voeg dan het 
-            paswoord in dat u eerder gebruikte om het artikel de reserveren, en 
+        <p>Ben jij de persoon  die het artikel gereserveerd heeft, en wil je het 
+            graag weer beschikbaar maken voor de andere gasten? Vul dan het 
+            paswoord in dat je eerder gebruikte om het artikel de reserveren, en 
             klik dan op \'Maak artikel beschikbaar\'.</p>
                 
         <form method="POST" >
@@ -128,7 +129,7 @@ function lijst_update_registry_database(){
                     WHERE id = %s;", $password, $item);
             $wpdb->query($sql);
             //Return success message
-            return "<p>Dankuwel. Dit artikel verschijnt nu als 'gereserveerd'
+            return "<p>Dankjewel. Dit artikel verschijnt nu als 'gereserveerd'
                         voor de andere gasten.
                     <br>
                     <br>
@@ -142,20 +143,20 @@ function lijst_update_registry_database(){
                     WHERE id = %s;", $item);
             $wpdb->query($sql);
             //Return success message
-            return "<p>Dankuwel. Dit artikel verschijnt nu opnieuw als 
+            return "<p>Dankjewel. Dit artikel verschijnt nu opnieuw als 
                         'beschikbaar' voor de andere gasten.
                     <br>
                     <br>
-                    <a href=\"/cadeaus\">Keer terug</a>
+                    <a href=\"/inspiratie/#cadeaus\">Keer terug</a>
                         naar alle artikels.</p>";
             //If the item is already reserved but the saved password does not match
             //the provided password
         } else if (lijst_retrieve_password($item) != $password){
             //Return error message, and display the form again so the user can
             //try again.
-            return '<p>Dit paswoord stemt niet overeen met het paswoord dat u 
+            return '<p>Dit paswoord stemt niet overeen met het paswoord dat je 
                         eerder gebruikte om dit artikel te reseveren. 
-                        Probeer a.u.b. opnieuw.</p>
+                        Probeer opnieuw.</p>
                     <form method="POST" >
                        <label for="pwd" style="font-color: white;">Paswoord:
                             </label><br>
@@ -163,7 +164,7 @@ function lijst_update_registry_database(){
                        <input type="hidden" id="item" name="' . $item . '">
                        <input type="submit" value="Maak dit artikel beschikbaar">
                     </form>
-                    <p>Indien u hulp nodig heeft, stuur dan een email naar 
+                    <p>Indien je hulp nodig hebt, stuur dan een e-mail naar 
                         t.gunzburg@gmail.com.</p>';
         }
     }
@@ -181,10 +182,18 @@ function lijst_update_registry_database(){
 function lijst_reserve_item( $content ) {
     //Only replace the content on this page
     if (is_page('reserveer-cadeau')){
+        //Create an array of database ids so that we can check if the item number
+        //is indeed a valid entry in the database
+        global $wpdb;
+        $all_itemsDB = $wpdb->get_results("SELECT id FROM wp_registry");
+        $all_items_ids = [];
+        foreach ($all_itemsDB as $item) {
+            array_push($all_items_ids, $item->id);
+        }
         
         //Only display the forms if there is an appropriate GET value set for the item.
         //Else display fallback page.
-        if (isset($_GET['item']) && $_GET['item'] >0 && $_GET['item'] <= 11){
+        if (isset($_GET['item']) && in_array($_GET['item'], $all_items_ids)){
             
             //If the form has eben submitted, display the corresponding success or
             //error message
@@ -218,16 +227,17 @@ add_filter( 'the_content', 'lijst_reserve_item', 99);
  */
 function lijst_toggle_reserved_items($content){
     //Only replace the content on this page
-    if (is_page('cadeaus')){
+    if (is_page('inspiratie')){
         //Loop through the array of available article ids
-        $all_items = [1,2,3,4,5,6,7,8,9,10,11];
-        foreach ($all_items as $item) {
+        global $wpdb;
+        $all_itemsDB = $wpdb->get_results("SELECT id FROM wp_registry");
+        foreach ($all_itemsDB as $item) {
             //Check if the item is reserved
-            if (lijst_retrieve_password($item)){
+            if (register_retrieve_password($item->id)){
                 //If it is, find the button HTML in the_content and replace it
                 //with a new string.
-                $string_to_find = 'value="' . $item . '"><input type="submit" value="Reserveer dit artikel">';
-                $string_to_replace = 'value="' . $item . '"><input type="submit" value="Maak beschikbaar">';
+                $string_to_find = 'value="' . $item->id . '"><input type="submit" value="Reserve this item">';
+                $string_to_replace = 'value="' . $item->id . '"><input type="submit" value="Un-reserve this item">';
                 //Return the updated content and move on to the next item in the array
                 $content = str_replace($string_to_find,$string_to_replace, $content);
             }
