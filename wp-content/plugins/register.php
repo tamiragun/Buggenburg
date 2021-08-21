@@ -50,6 +50,8 @@ function register_print_form(){
     //the item is NOT reserved)
     if (!register_retrieve_password($item)){
         //Display the form to reserve the item
+        
+        /*In production, use "/inspiration/#gifts" as href instead of http://localhost/wordpress/buggenburg_local/inspiration/#gifts*/
         $form = '
         <figure class="wp-block-image size-large is-style-twentytwentyone-border">
             <img src="' . $image_url . '" alt=""/></figure>        
@@ -67,18 +69,20 @@ function register_print_form(){
            <input type="submit" value="Reserve this item">
         </form>
         <br>
-        <p>Or <a href="/inspiration/#gifts">go back</a> to browse 
+        <p>Or <a href="http://localhost/wordpress/buggenburg_local/inspiration/#gifts">go back</a> to browse 
             other items.</p>';
         return $form;
     //Check if the password of the corresponding registry item is not null 
     //(i.e. the item IS reserved)
     } else if (register_retrieve_password($item)) {
         //Display the form to unreserve the item
+        
+        /*In production, use "/inspiration/#gifts" as href*/
         $form = '
         <figure class="wp-block-image size-large is-style-twentytwentyone-border">
             <img src="' . $image_url . '" alt=""/></figure>
         <p>Someone has already reserved this item. You can <a href=
-            "/inspiration/#gifts">go back</a> to browse other items.</p>
+            "http://localhost/wordpress/buggenburg_local/inspiration/#gifts">go back</a> to browse other items.</p>
         <br>
         <p>If you are the person who reserved this item, and you would like to 
             make it available to other guests again, just enter the password 
@@ -126,11 +130,13 @@ function register_update_registry_database(){
                     WHERE id = %s;", $password, $item);
             $wpdb->query($sql);
             //Return success message
+            
+            /*In production, use "/" as href instead of http://localhost/wordpress/buggenburg_local/*/
             return "<p>Thank you. This item is now marked as 'reserved' to 
                         other guests.
                     <br>
                     <br>
-                    <a href=\"/\">Go back to 
+                    <a href=\"http://localhost/wordpress/buggenburg_local/\">Go back to 
                         home</a>.</p>";                    
         
         //If the item is already reserved check that the saved password matches 
@@ -141,11 +147,12 @@ function register_update_registry_database(){
                     WHERE id = %s;", $item);
             $wpdb->query($sql);
             //Return success message
+            /*In production, use "/inspiration/#gifts" as href instead of http://localhost/wordpress/buggenburg_local/inspiration/#gifts*/
             return "<p>Thank you. This item is now marked as available again 
                         to other guests. 
                     <br>
                     <br>
-                    <a href=\"inspiration/#gifts\">Go back</a> 
+                    <a href=\"http://localhost/wordpress/buggenburg_local/inspiration/#gifts\">Go back</a> 
                         to browse other items.</p>";
         //If the item is already reserved but the saved password does not match 
         //the provided password
