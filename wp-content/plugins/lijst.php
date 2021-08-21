@@ -233,11 +233,11 @@ function lijst_toggle_reserved_items($content){
         $all_itemsDB = $wpdb->get_results("SELECT id FROM wp_registry");
         foreach ($all_itemsDB as $item) {
             //Check if the item is reserved
-            if (register_retrieve_password($item->id)){
+            if (lijst_retrieve_password($item->id)){
                 //If it is, find the button HTML in the_content and replace it
                 //with a new string.
-                $string_to_find = 'value="' . $item->id . '"><input type="submit" value="Reserve this item">';
-                $string_to_replace = 'value="' . $item->id . '"><input type="submit" value="Un-reserve this item">';
+                $string_to_find = 'value="' . $item->id . '"><input type="submit" value="Reserveer dit artikel">';
+                $string_to_replace = 'value="' . $item->id . '"><input type="submit" value="Maak beschikbaar">';
                 //Return the updated content and move on to the next item in the array
                 $content = str_replace($string_to_find,$string_to_replace, $content);
             }
